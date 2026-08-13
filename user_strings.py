@@ -1,0 +1,7 @@
+WELCOME_MESSAGE = "ברוכים הבאים לבוט נותני השירות המאומתים! 🤖✨\n\nאנא בחר קטגוריה מהתפריט למטה 👇:"
+CHOOSE_PROVIDER = "אנא בחר נותן שירות מהרשימה למטה 📋👇:"
+PROVIDER_ACTION_PROMPT = "אנא בחר פעולה עבור \"{display_name}\" ⚙️:"
+CONTACT_PROVIDER_MSG = "ליצירת קשר עם נותן השירות, אנא השתמש בקישור למטה 💬👇:\n\n<a href='tg://user?id={provider_id}'>פתיחת צ'אט</a>"
+ENTER_REVIEW_PROMPT = "אנא כתוב את הביקורת שלך על \"{display_name}\" למטה ✍️👇:"
+REVIEW_SUBMITTED_SUCCESS = "תודה! 🙏 הביקורת שלך נשלחה וממתינה לאישור הנהלה ✅⏳"
+NO_REVIEWS_TEXT = "כרגע אין ביקורות מאושרות עבור נותן שירות זה 📭"
