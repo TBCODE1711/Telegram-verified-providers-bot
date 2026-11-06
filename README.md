@@ -180,7 +180,7 @@ The application is completely infrastructure-agnostic. You can run it locally in
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/Telegram_users_bot.git
+   git clone https://github.com/TBCODE1711E/Telegram_users_bot.git
    cd Telegram_users_bot
    ```
 
