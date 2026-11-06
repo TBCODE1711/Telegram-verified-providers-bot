@@ -20,10 +20,10 @@ Telegram communities have become major hubs for digital commerce and freelance s
 
 ## 🎥 Live Demo & Walkthrough
 
-🔗 **Live Test Bot:** [Try the Bot on Telegram](https://t.me/YOUR_BOT_USERNAME_HERE) *(Replace with actual link)*
+🔗 **Live Test Bot:** [Try the Bot on Telegram]https://t.me/verefied_providers_test_bot
 
 ### Video Demonstration
-<!-- Replace the placeholder below with your video link or drag-and-drop your MP4/GIF directly into GitHub's markdown editor -->
+
 <div align="center">
   <a href="YOUR_VIDEO_URL_HERE">
     <img src="https://via.placeholder.com/800x450.png?text=Video+Demo+Placeholder+-+Click+to+Watch" alt="Bot Walkthrough Demo" width="750"/>
