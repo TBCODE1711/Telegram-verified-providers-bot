@@ -2,7 +2,7 @@ import logging
 from aiohttp import web
 from aiogram import Bot, Dispatcher
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
-from config import WEBHOOK_HOST, PORT
+from core.config import WEBHOOK_HOST, PORT
 
 WEBHOOK_PATH = "/webhook"
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"

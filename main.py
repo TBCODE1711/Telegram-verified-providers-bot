@@ -1,9 +1,9 @@
 from aiogram import Bot, Dispatcher
-from admin_handlers import admin_router
-from user_handlers import user_router
-from config import BOT_TOKEN
-from telegram_bot_webhook import start_webhook_server
-from database_manager import init_models
+from handlers.admin_handlers import admin_router
+from handlers.user_handlers import user_router
+from core.config import BOT_TOKEN
+from core.telegram_bot_webhook import start_webhook_server
+from database.database_manager import init_models
 
 async def on_db_startup(*args, **kwargs):
     await init_models()

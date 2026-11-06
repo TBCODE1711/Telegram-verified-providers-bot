@@ -3,12 +3,12 @@ from aiogram import Router, types, F
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.exceptions import TelegramAPIError
-from user_keyboards import get_providers_keyboard, get_provider_actions_keyboard, get_back_to_provider_actions_keyboard, get_back_to_main_menu_keyboard, get_category_selection_keyboard
-import user_strings
-from database_manager import AsyncSessionLocal, get_active_providers_by_category, get_approved_reviews, add_review
-from utils import track_message, delete_tracked_messages
-from user_states import AddReviewStates
-from config import CATEGORIES_LIST, MAIN_PIC_ID
+from keyboards.user_keyboards import get_providers_keyboard, get_provider_actions_keyboard, get_back_to_provider_actions_keyboard, get_back_to_main_menu_keyboard, get_category_selection_keyboard
+from strings import user_strings
+from database.database_manager import AsyncSessionLocal, get_active_providers_by_category, get_approved_reviews, add_review
+from core.utils import track_message, delete_tracked_messages
+from states.user_states import AddReviewStates
+from core.config import CATEGORIES_LIST, MAIN_PIC_ID
 
 user_router = Router()
 

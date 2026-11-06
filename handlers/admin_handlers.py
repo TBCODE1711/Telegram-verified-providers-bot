@@ -3,14 +3,14 @@ from aiogram import Router, types, F, Bot
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.exceptions import TelegramAPIError
-from admin_keyboards import get_admin_main_menu_keyboard, get_edit_provider_keyboard, get_toggle_confirmation_keyboard, get_review_approval_keyboard, get_category_selection_keyboard
-from shared_keyboards import get_cancel_keyboard, get_confirmation_keyboard
+from keyboards.admin_keyboards import get_admin_main_menu_keyboard, get_edit_provider_keyboard, get_toggle_confirmation_keyboard, get_review_approval_keyboard, get_category_selection_keyboard
+from keyboards.shared_keyboards import get_cancel_keyboard, get_confirmation_keyboard
 
-from admin_states import AddProviderStates, SearchProviderStates, EditProviderStates
-import strings
-from database_manager import AsyncSessionLocal, add_service_provider, get_service_provider, update_provider_display_name, update_provider_category, toggle_provider_active_status, get_oldest_pending_review, update_review_status
-from utils import track_message, delete_tracked_messages
-from config import ADMIN_IDS, CATEGORIES_LIST
+from states.admin_states import AddProviderStates, SearchProviderStates, EditProviderStates
+from strings import strings
+from database.database_manager import AsyncSessionLocal, add_service_provider, get_service_provider, update_provider_display_name, update_provider_category, toggle_provider_active_status, get_oldest_pending_review, update_review_status
+from core.utils import track_message, delete_tracked_messages
+from core.config import ADMIN_IDS, CATEGORIES_LIST
 
 admin_router = Router()
 
