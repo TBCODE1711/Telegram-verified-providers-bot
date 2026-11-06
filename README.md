@@ -25,7 +25,7 @@ Telegram communities have become major hubs for digital commerce and freelance s
 ### Video Demonstration
 
 <div align="center">
-  <a href="YOUR_VIDEO_URL_HERE">
+  <a href="(https://drive.google.com/file/d/11wVj1cx0Jy5GMMyEnLNrVIuc_2wh0vN0/view?usp=sharing)">
     <img src="https://via.placeholder.com/800x450.png?text=Video+Demo+Placeholder+-+Click+to+Watch" alt="Bot Walkthrough Demo" width="750"/>
   </a>
   <p><i>Demonstration of the User Directory Navigation, Review Submission, and Admin Moderation Flows.</i></p>
