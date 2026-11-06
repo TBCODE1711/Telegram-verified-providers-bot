@@ -1,3 +1,4 @@
+import html
 import logging
 from aiogram import Router, types, F
 from aiogram.filters import CommandStart
@@ -5,10 +6,11 @@ from aiogram.fsm.context import FSMContext
 from aiogram.exceptions import TelegramAPIError
 from keyboards.user_keyboards import get_providers_keyboard, get_provider_actions_keyboard, get_back_to_provider_actions_keyboard, get_back_to_main_menu_keyboard, get_category_selection_keyboard
 from strings import user_strings
-from database.database_manager import AsyncSessionLocal, get_active_providers_by_category, get_approved_reviews, add_review
+from database.connection import AsyncSessionLocal
+from database.crud import get_active_providers_by_category, get_approved_reviews, add_review
 from core.utils import track_message, delete_tracked_messages
 from states.user_states import AddReviewStates
-from core.config import CATEGORIES_LIST, MAIN_PIC_ID
+from core.config import CATEGORIES_LIST, MAIN_PIC_ID, REVIEWS_PER_PAGE
 
 user_router = Router()
 
@@ -119,27 +121,45 @@ async def contact_provider(callback: types.CallbackQuery):
     except Exception as e:
         logging.error(f"Unexpected error in contact_provider: {e}")
 
-# Displays the approved reviews for a specific service provider.
-# Trigger: Callback data starting with "read_reviews_".
-# Args: callback (types.CallbackQuery)
+# Displays the approved reviews for a specific service provider with pagination.
+# Trigger: Callback data starting with "read_reviews_" or "reviews_page_".
+# Args: callback (types.CallbackQuery), state (FSMContext)
 # Returns: None
-@user_router.callback_query(F.data.startswith("read_reviews_"))
-async def show_provider_reviews(callback: types.CallbackQuery):
+@user_router.callback_query(F.data.startswith("read_reviews_") | F.data.startswith("reviews_page_"))
+async def show_provider_reviews(callback: types.CallbackQuery, state: FSMContext):
     try:
-        parts = callback.data.split("_", 4)
-        provider_id = int(parts[2])
-        category = parts[3]
-        display_name = parts[4]
+        if callback.data.startswith("read_reviews_"):
+            parts = callback.data.split("_", 4)
+            provider_id = int(parts[2])
+            category = parts[3]
+            display_name = parts[4]
+            page = 0
+            await state.update_data(provider_id=provider_id, category=category, display_name=display_name)
+        else:
+            page = int(callback.data.split("_")[2])
+            data = await state.get_data()
+            provider_id = data.get("provider_id")
+            category = data.get("category")
+            display_name = data.get("display_name")
+            if not provider_id:
+                await show_start_menu(callback.message, state)
+                await callback.answer()
+                return
         
         async with AsyncSessionLocal() as session:
             reviews = await get_approved_reviews(session, provider_id)
             
         if not reviews:
             text = user_strings.NO_REVIEWS_TEXT
+            total_pages = 1
         else:
-            text = format_reviews_display(reviews)
+            total_pages = (len(reviews) + REVIEWS_PER_PAGE - 1) // REVIEWS_PER_PAGE
+            page = max(0, min(page, total_pages - 1))
+            start_idx = page * REVIEWS_PER_PAGE
+            page_reviews = reviews[start_idx:start_idx + REVIEWS_PER_PAGE]
+            text = format_reviews_display(page_reviews, page, total_pages)
             
-        keyboard = get_back_to_provider_actions_keyboard(provider_id, category, display_name)
+        keyboard = get_back_to_provider_actions_keyboard(provider_id, category, display_name, page, total_pages)
         
         await callback.message.edit_text(text=text, reply_markup=keyboard, parse_mode="HTML")
         await callback.answer()
@@ -148,14 +168,17 @@ async def show_provider_reviews(callback: types.CallbackQuery):
     except Exception as e:
         logging.error(f"Unexpected error in show_provider_reviews: {e}")
 
-# Formats a list of approved reviews into a display string.
-# Args: reviews (list)
+# Formats a list of approved reviews into an HTML-safe display string.
+# Args: reviews (list), page (int), total_pages (int)
 # Returns: str
-def format_reviews_display(reviews: list) -> str:
-    text = "<b>Approved Reviews:</b>\n\n"
+def format_reviews_display(reviews: list, page: int = 0, total_pages: int = 1) -> str:
+    header = f"<b>Approved Reviews ({page + 1}/{total_pages}):</b>\n\n" if total_pages > 1 else "<b>Approved Reviews:</b>\n\n"
+    text = header
     for review in reviews:
-        username = review.sender_username if review.sender_username else "Unknown User"
-        text += f"<b>{username}:</b>\n\"{review.review_text}\"\n\n-------------------\n\n"
+        raw_username = review.sender_username if review.sender_username else "Unknown User"
+        username = html.escape(raw_username)
+        review_text = html.escape(review.review_text)
+        text += f"<b>{username}:</b>\n\"{review_text}\"\n\n-------------------\n\n"
     return text
 
 

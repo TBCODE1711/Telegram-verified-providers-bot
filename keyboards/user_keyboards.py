@@ -23,10 +23,27 @@ def get_provider_actions_keyboard(provider_id: int, display_name: str, category:
     builder.adjust(1)
     return builder.as_markup()
 
-def get_back_to_provider_actions_keyboard(provider_id: int, category: str, display_name: str) -> InlineKeyboardMarkup:
+def get_back_to_provider_actions_keyboard(
+    provider_id: int,
+    category: str,
+    display_name: str,
+    page: int = 0,
+    total_pages: int = 1
+) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
+    nav_buttons = 0
+    if page > 0:
+        builder.button(text="➡️ הקודם", callback_data=f"reviews_page_{page - 1}")
+        nav_buttons += 1
+    if page < total_pages - 1:
+        builder.button(text="הבא ⬅️", callback_data=f"reviews_page_{page + 1}")
+        nav_buttons += 1
+
     builder.button(text="חזרה", callback_data=f"provider_{provider_id}_{category}_{display_name}")
-    builder.adjust(1)
+    if nav_buttons > 0:
+        builder.adjust(nav_buttons, 1)
+    else:
+        builder.adjust(1)
     return builder.as_markup()
 
 def get_back_to_main_menu_keyboard() -> InlineKeyboardMarkup:

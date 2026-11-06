@@ -1,61 +1,8 @@
-import sqlalchemy
-import asyncpg
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, selectinload
-import datetime
-from sqlalchemy import BigInteger, String, Boolean, ForeignKey, DateTime
-from sqlalchemy.sql import func
+from typing import Optional
 from sqlalchemy import select, or_
 from sqlalchemy.exc import IntegrityError, OperationalError, PendingRollbackError
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from typing import Optional
-from core.config import DATABASE_URL
-
-class Base(DeclarativeBase):
-    pass
-
-class ServiceProvider(Base):
-    __tablename__ = 'service_providers'
-
-    user_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
-    username: Mapped[str] = mapped_column(String, nullable=True)
-    display_name: Mapped[str] = mapped_column(String, nullable=False)
-    category: Mapped[str] = mapped_column(String, nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    created_at: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
-
-    reviews: Mapped[list["Review"]] = relationship(back_populates="provider")
-
-class Review(Base):
-    __tablename__ = 'reviews'
-
-    review_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    provider_id: Mapped[int] = mapped_column(ForeignKey("service_providers.user_id"), nullable=False)
-    sender_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
-    sender_username: Mapped[str] = mapped_column(String, nullable=True)
-    review_text: Mapped[str] = mapped_column(String, nullable=False)
-    status: Mapped[str] = mapped_column(String, default="PENDING", nullable=False)
-    created_at: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
-
-    provider: Mapped["ServiceProvider"] = relationship(back_populates="reviews")
-
-
-engine = create_async_engine(
-    DATABASE_URL,
-    echo=False,
-    pool_size=2,
-    max_overflow=3
-)
-AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
-
-# Initializes the database by creating all defined tables.
-# Args: None
-# Returns: None
-async def init_models():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-
+from sqlalchemy.ext.asyncio import AsyncSession
+from database.models import ServiceProvider, Review
 
 
 # Adds a new service provider.
@@ -93,7 +40,6 @@ async def add_service_provider(
         raise
 
 
-
 # Retrieves active service providers filtered by category.
 # Args: session (AsyncSession), category (str)
 # Returns: list[ServiceProvider]
@@ -115,7 +61,6 @@ async def get_active_providers_by_category(
         raise ConnectionError("Database connection lost.")
     except Exception:
         raise
-
 
 
 # Retrieves a single service provider by ID or username.
@@ -147,7 +92,6 @@ async def get_service_provider(
         raise ConnectionError("Database connection lost.")
 
 
-
 # Updates the display name of a specific service provider.
 # Args: session (AsyncSession), new_display_name (str), user_id (Optional[int]), username (Optional[str])
 # Returns: bool (True if updated, False if provider not found)
@@ -171,7 +115,6 @@ async def update_provider_display_name(
     except OperationalError:
         await session.rollback()
         raise ConnectionError("Database connection lost or transaction locked.")
-
 
 
 # Updates the category of a specific service provider.
@@ -199,7 +142,6 @@ async def update_provider_category(
         raise ConnectionError("Database connection lost or transaction locked.")
 
 
-
 # Toggles the active status (is_active) of a service provider for soft deletion/restoration.
 # Args: session (AsyncSession), user_id (Optional[int]), username (Optional[str])
 # Returns: bool (True if updated, False if provider not found)
@@ -222,7 +164,6 @@ async def toggle_provider_active_status(
     except OperationalError:
         await session.rollback()
         raise ConnectionError("Database connection lost or transaction locked.")
-
 
 
 # Adds a new review for a service provider with a default "PENDING" status.
@@ -257,7 +198,6 @@ async def add_review(
         raise ConnectionError("Database connection lost.")
 
 
-
 # Retrieves all approved reviews for a specific service provider.
 # Args: session (AsyncSession), provider_id (int)
 # Returns: list[Review]
@@ -276,7 +216,6 @@ async def get_approved_reviews(
         raise ConnectionError("Database connection lost.")
 
 
-
 # Retrieves the oldest review that is currently waiting for admin approval ("PENDING" status).
 # Args: session (AsyncSession)
 # Returns: Optional[Review]
@@ -292,7 +231,6 @@ async def get_oldest_pending_review(
         raise RuntimeError("Session state is invalid. Rollback executed.")
     except OperationalError:
         raise ConnectionError("Database connection lost.")
-
 
 
 # Updates the status of a specific review (e.g., to "APPROVED" or "REJECTED").
@@ -320,3 +258,4 @@ async def update_review_status(
     except OperationalError:
         await session.rollback()
         raise ConnectionError("Database connection lost or transaction locked.")
+

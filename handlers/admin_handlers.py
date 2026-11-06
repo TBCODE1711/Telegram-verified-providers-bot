@@ -8,7 +8,8 @@ from keyboards.shared_keyboards import get_cancel_keyboard, get_confirmation_key
 
 from states.admin_states import AddProviderStates, SearchProviderStates, EditProviderStates
 from strings import strings
-from database.database_manager import AsyncSessionLocal, add_service_provider, get_service_provider, update_provider_display_name, update_provider_category, toggle_provider_active_status, get_oldest_pending_review, update_review_status
+from database.connection import AsyncSessionLocal
+from database.crud import add_service_provider, get_service_provider, update_provider_display_name, update_provider_category, toggle_provider_active_status, get_oldest_pending_review, update_review_status
 from core.utils import track_message, delete_tracked_messages
 from core.config import ADMIN_IDS, CATEGORIES_LIST
 
