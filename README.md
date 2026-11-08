@@ -26,7 +26,8 @@ Telegram communities have become major hubs for digital commerce and freelance s
 
 <div align="center">
   <a href="https://drive.google.com/file/d/11wVj1cx0Jy5GMMyEnLNrVIuc_2wh0vN0/view?usp=sharing">
-    <img src="PASTE_GITHUB_IMAGE_URL_HERE" alt="Watch VouchBot Video Demonstration" width="700"/>
+    <img src="https://github.com/user-attachments/assets/f47deb60-998a-467e-98c4-96c679d57778"
+ alt="Watch VouchBot Video Demonstration" width="700"/>
   </a>
   <p><i>▶️ Click the image above to watch the full video walkthrough (User Directory, Reviews & Admin Moderation).</i></p>
 </div>
