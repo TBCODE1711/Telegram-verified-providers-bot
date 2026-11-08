@@ -24,7 +24,12 @@ Telegram communities have become major hubs for digital commerce and freelance s
 
 ### Video Demonstration
 
-https://drive.google.com/file/d/11wVj1cx0Jy5GMMyEnLNrVIuc_2wh0vN0/view?usp=sharing
+<div align="center">
+  <a href="https://drive.google.com/file/d/11wVj1cx0Jy5GMMyEnLNrVIuc_2wh0vN0/view?usp=sharing">
+    <img src="PASTE_GITHUB_IMAGE_URL_HERE" alt="Watch VouchBot Video Demonstration" width="700"/>
+  </a>
+  <p><i>▶️ Click the image above to watch the full video walkthrough (User Directory, Reviews & Admin Moderation).</i></p>
+</div>
 
 ---
 
@@ -180,7 +185,7 @@ The application is completely infrastructure-agnostic. You can run it locally in
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/TBCODE1711E/Telegram_users_bot.git
+   git clone https://github.com/TBCODE1711/Telegram_users_bot.git
    cd Telegram_users_bot
    ```
 
